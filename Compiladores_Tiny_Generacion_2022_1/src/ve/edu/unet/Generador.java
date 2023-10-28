@@ -87,21 +87,39 @@ public class Generador {
 			generarLeer(nodo);
 		}else if (nodo instanceof  NodoEscribir){
 			generarEscribir(nodo);
-		}else if (nodo instanceof NodoValor){
+		} else if ( nodo instanceof DeclaracionArray ) {
+			DeclaracionArray arrDecl = (DeclaracionArray) nodo;
+		} else if (nodo instanceof NodoValor){
 			generarValor(nodo);
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
+		} else if(nodo instanceof  ValorArray )  {
+			generarValorArray(nodo);
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido");
 		}
 		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
-		if(nodo.TieneHermano())
+		if( nodo != null && nodo.TieneHermano())
 			generar(nodo.getHermanoDerecha());
 	}else
 		System.out.println("���ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
+	private  static void generarValorArray(NodoBase nodo) {
+		ValorArray varr = (ValorArray) nodo;
+		// pone en AC el valor numero del idx
+
+		generar(varr.getIdxExpresion());
+
+		// TODO fix bug where this explotes if undefined array , add semantic analizer
+
+		int direccion = tablaSimbolos.getDireccion(varr.getIdentificador());
+		UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "");
+		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "");
+		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC, UtGen.GP, "");
+		UtGen.emitirRM("LD", UtGen.AC,0 ,UtGen.AC, "");
+	}
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
@@ -146,8 +164,42 @@ public class Generador {
 	}		
 	
 	private static void generarAsignacion(NodoBase nodo){
-		NodoAsignacion n = (NodoAsignacion)nodo;
 		int direccion;
+		NodoAsignacion n = (NodoAsignacion)nodo;
+
+		if ( n.getIsArray() && n.getIdxExpression() != null ) {
+
+			System.out.println("Hay una acciones de array!");
+			// instrucciones para guardar idx en AC
+			generar( n.getIdxExpression() );
+
+			// guarda direccion base de variable en AC1
+			direccion = tablaSimbolos.getDireccion(n.getIdentificador());
+			System.out.println(direccion);
+			UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "");
+
+			// AC = &arr + idx = ac + ac1
+			UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "");
+
+			// tempX = AC = &arr + idx
+			UtGen.emitirRM("ST", UtGen.AC, desplazamientoTmp--, UtGen.MP, "");
+
+			// intrucciones para guardar valor derecha del igual  en AC
+			generar( n.getExpresion() );
+
+			// AC1 = tempX = &arr + idx
+			UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "");
+
+			// AC1 = &arr + idx + GP
+			// esto es inutil por que GP = 0 pero igual se pone por si fuera a cambiar
+			UtGen.emitirRO("ADD", UtGen.AC1, UtGen.AC1, UtGen.GP, "");
+
+			// *AC1 = AC => *(&arr + idx + GP) =  value;
+			UtGen.emitirRM("ST", UtGen.AC, 0 , UtGen.AC1, "");
+			return;
+		}
+
+
 		if(UtGen.debug)	UtGen.emitirComentario("-> asignacion");		
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
 		generar(n.getExpresion());
@@ -219,12 +271,13 @@ public class Generador {
 							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
 							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
 							break;
+
 			case	igual:	UtGen.emitirRO("SUB", UtGen.AC, UtGen.AC1, UtGen.AC, "op: ==");
 							UtGen.emitirRM("JEQ", UtGen.AC, 2, UtGen.PC, "voy dos instrucciones mas alla if verdadero (AC==0)");
 							UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
 							UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
 							UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");
-							break;	
+							break;
 			default:
 							UtGen.emitirComentario("BUG: tipo de operacion desconocida");
 		}

@@ -23,13 +23,17 @@ public class sym {
   public static final int WRITE = 9;
   public static final int ID = 10;
   public static final int NUM = 11;
+  public static final int LSBRACKET = 24;
   public static final int EOF = 0;
   public static final int MINUS = 16;
   public static final int error = 1;
   public static final int UNTIL = 7;
   public static final int ASSIGN = 12;
   public static final int EQ = 13;
+  public static final int RSBRACKET = 25;
+  public static final int ARRAY = 23;
   public static final int REPEAT = 6;
+  public static final int DECLARE = 22;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -52,7 +56,11 @@ public class sym {
   "OVER",
   "LPAREN",
   "RPAREN",
-  "SEMI"
+  "SEMI",
+  "DECLARE",
+  "ARRAY",
+  "LSBRACKET",
+  "RSBRACKET"
   };
 }
 

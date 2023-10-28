@@ -44,9 +44,11 @@ public class TablaSimbolos {
 			System.out.println(id);
 			cargarTabla(((NodoAsignacion)raiz).getExpresion());
 
+		} else if (raiz instanceof DeclaracionArray) {
+			DeclaracionArray arrDecl = (DeclaracionArray)raiz;
+			InsertarSimbolo(arrDecl.getIdentificador(), -1,arrDecl.getSize());
 		} else if (raiz instanceof  NodoEscribir) {
 			cargarTabla(((NodoEscribir) raiz).getExpresion());
-
 		} else if (raiz instanceof NodoOperacion){
 	    	cargarTabla(((NodoOperacion)raiz).getOpIzquierdo());
 	    	cargarTabla(((NodoOperacion)raiz).getOpDerecho());
@@ -66,6 +68,18 @@ public class TablaSimbolos {
 			return true;			
 		}
 	}
+
+	public boolean InsertarSimbolo(String identificador, int numLinea,int size){
+		RegistroSimbolo simbolo;
+		if(tabla.containsKey(identificador)){
+			return false;
+		}
+		simbolo= new RegistroSimbolo(identificador,numLinea,direccion);
+		tabla.put(identificador,simbolo);
+		direccion += size;
+		return true;
+	}
+
 	
 	public RegistroSimbolo BuscarSimbolo(String identificador){
 		RegistroSimbolo simbolo=(RegistroSimbolo)tabla.get(identificador);
@@ -76,7 +90,7 @@ public class TablaSimbolos {
 		System.out.println("*** Tabla de Simbolos ***");
 		for( Iterator <String>it = tabla.keySet().iterator(); it.hasNext();) { 
             String s = (String)it.next();
-	    System.out.println("Consegui Key: "+s+" con direccion: " + BuscarSimbolo(s).getDireccionMemoria());
+	    	System.out.println("Consegui Key: "+s+" con direccion: " + BuscarSimbolo(s).getDireccionMemoria());
 		}
 	}
 

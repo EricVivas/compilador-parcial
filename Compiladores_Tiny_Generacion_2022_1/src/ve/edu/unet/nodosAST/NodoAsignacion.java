@@ -3,6 +3,10 @@ package ve.edu.unet.nodosAST;
 public class NodoAsignacion extends NodoBase {
 	private String identificador;
 	private NodoBase expresion;
+	private boolean isArray = false;
+	private NodoBase idxExpression = null;
+
+
 	
 	public NodoAsignacion(String identificador) {
 		super();
@@ -14,6 +18,22 @@ public class NodoAsignacion extends NodoBase {
 		super();
 		this.identificador = identificador;
 		this.expresion = expresion;
+	}
+
+	public NodoAsignacion(String identificador, NodoBase expresion,boolean isArr,NodoBase idxExp) {
+		super();
+		this.identificador = identificador;
+		this.expresion = expresion;
+		this.isArray = isArr;
+		this.idxExpression = idxExp;
+	}
+
+	public boolean getIsArray() {
+		return isArray;
+	}
+
+	public NodoBase getIdxExpression() {
+		return idxExpression;
 	}
 
 	public String getIdentificador() {
