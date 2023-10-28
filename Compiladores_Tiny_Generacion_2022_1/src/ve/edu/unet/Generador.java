@@ -53,6 +53,8 @@ public class Generador {
 		System.out.println();
 		System.out.println();
 		System.out.println("------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+
+		UtGen.closeFile();
 	}
 	
 	//Funcion principal de generacion de codigo
@@ -82,7 +84,7 @@ public class Generador {
 		if(nodo.TieneHermano())
 			generar(nodo.getHermanoDerecha());
 	}else
-		System.out.println("¡¡¡ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
+		System.out.println("ï¿½ï¿½ï¿½ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
 
 	private static void generarIf(NodoBase nodo){

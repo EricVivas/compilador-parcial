@@ -191,13 +191,14 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 /***********
-SymbolFactory es una nueva caracteristica que ha sido añadida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
-, esto debido a que dicha clase no provee mucha información de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
+SymbolFactory es una nueva caracteristica que ha sido aï¿½adida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
+, esto debido a que dicha clase no provee mucha informaciï¿½n de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
 Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols-in-cup/
 ***********/
 	public static void main(String args[]) throws Exception {
 		SymbolFactory sf = new DefaultSymbolFactory();
 		parser parser_obj;
+        System.out.println(args[0]);
 		if (args.length==0) 
 			parser_obj=new parser(new Lexico(new InputStreamReader(System.in),sf),sf);
 		else
@@ -214,6 +215,23 @@ Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols
 		ts.ImprimirClaves();
 		Generador.setTablaSimbolos(ts);
 		Generador.generarCodigoObjeto(root);
+
+        /*code for compile and execute automatically*/
+        /*compile ejemplo_fuente/in.tny*/
+        String tinyXPath = "./Compiladores_Tiny_Generacion_2022_1/ejemplo_generado/tiny64.exe";
+        String tmPath = "./Compiladores_Tiny_Generacion_2022_1/ejemplo_generado/out.tm";
+        String command_to_playwith =tinyXPath + " " + tmPath;
+        System.out.println("Opening cmd window");
+        try {
+            String command = "cmd /c" + " start" + command_to_playwith;
+            //Starting the new child process
+            Process childprocess11 = Runtime.getRuntime().exec(command);
+            System.out.println("The child process is Alive: " + childprocess11.isAlive());
+            System.out.println();
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e);
+        }
 	}
 
 
