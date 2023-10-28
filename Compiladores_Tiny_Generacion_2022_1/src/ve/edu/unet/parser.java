@@ -199,6 +199,7 @@ Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols
 
 		SymbolFactory sf = new DefaultSymbolFactory();
 		parser parser_obj;
+        System.out.println(args[0]);
 		if (args.length==0) 
 			parser_obj=new parser(new Lexico(new InputStreamReader(System.in),sf),sf);
 		else
@@ -210,6 +211,7 @@ Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols
 		ts.cargarTabla(root);
 		Generador.setTablaSimbolos(ts);
 		Generador.generarCodigoObjeto(root);
+
 	}
 
 
