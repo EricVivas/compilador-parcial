@@ -55,6 +55,22 @@ public class Generador {
 		System.out.println("------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
 
 		UtGen.closeFile();
+		/*code for compile and execute automatically*/
+		/*compile ejemplo_fuente/in.tny*/
+		String tinyXPath = "./Compiladores_Tiny_Generacion_2022_1/ejemplo_generado/tiny64.exe";
+		String tmPath = "./Compiladores_Tiny_Generacion_2022_1/ejemplo_generado/out.tm";
+		String command_to_playwith =tinyXPath + " " + tmPath;
+		System.out.println("Opening cmd window");
+		try {
+			String command = "cmd /c" + " start" + command_to_playwith;
+			//Starting the new child process
+			Process childprocess11 = Runtime.getRuntime().exec(command);
+			System.out.println("The child process is Alive: " + childprocess11.isAlive());
+			System.out.println();
+		}
+		catch (Exception e){
+			System.out.println("Error: " + e);
+		}
 	}
 	
 	//Funcion principal de generacion de codigo
