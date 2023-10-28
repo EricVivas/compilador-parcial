@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Correr Proyecto" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="ve.edu.unet.parser" />
+    <module name="Compiladores_Tiny_Generacion_2022_3" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
