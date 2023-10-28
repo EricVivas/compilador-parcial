@@ -14,7 +14,7 @@ public class UtGen {
 	private static int instruccionActual=0;	//Direccion (num linea) actual de emision de la instruccion
 	private static int instruccionMasAlta=0;	//Almacena la direccion de la instruccion que ha resultado ser la mayor hasta ahora
 	public static boolean debug=true;
-
+	private static int etiquetaActual = 0;
 	/* PC = program counter, registro[7] donde se almacena la direccion (linea)
 	 *  actual de ejecucion del codigo objeto
 	 */
@@ -175,6 +175,13 @@ public class UtGen {
 		writeFile("\n");
 		if(instruccionMasAlta < instruccionActual)
 			instruccionMasAlta = instruccionActual;
+	}
+	public static int nuevaEtiqueta() {
+		return etiquetaActual++;
+	}
+
+	public static void emitirEtiqueta(int etiqueta) {
+		writeFile("L" + etiqueta + ":");
 	}
 
 	/*TODO: Cambiar emision por pantalla por stream*/

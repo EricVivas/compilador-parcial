@@ -21,7 +21,7 @@ public class TablaSimbolos {
 		while (raiz != null) {
 	    if (raiz instanceof NodoIdentificador){
 	    	InsertarSimbolo(((NodoIdentificador)raiz).getNombre(),-1);
-	    	//TODO: Añadir el numero de linea y localidad de memoria correcta
+	    	//TODO: Aï¿½adir el numero de linea y localidad de memoria correcta
 	    }
 
 	    /* Hago el recorrido recursivo */
@@ -32,14 +32,27 @@ public class TablaSimbolos {
 	    		cargarTabla(((NodoIf)raiz).getParteElse());
 	    	}
 	    }
-	    else if (raiz instanceof  NodoRepeat){
-	    	cargarTabla(((NodoRepeat)raiz).getCuerpo());
-	    	cargarTabla(((NodoRepeat)raiz).getPrueba());
-	    }
-	    else if (raiz instanceof  NodoAsignacion)
-	    	cargarTabla(((NodoAsignacion)raiz).getExpresion());
-	    else if (raiz instanceof  NodoEscribir)
-	    	cargarTabla(((NodoEscribir)raiz).getExpresion());
+		else if (raiz instanceof  NodoRepeat){
+			cargarTabla(((NodoRepeat)raiz).getCuerpo());
+			cargarTabla(((NodoRepeat)raiz).getPrueba());
+		}
+		else if (raiz instanceof  NodoFor){
+			cargarTabla(((NodoFor)raiz).getCuerpo());
+			cargarTabla(((NodoFor)raiz).getFin());
+		}
+		else if (raiz instanceof  NodoLeer){
+			NodoLeer n = (NodoLeer)raiz;
+			InsertarSimbolo(n.getIdentificador(),-1);
+		}
+	    else if (raiz instanceof  NodoAsignacion) {
+            String id = ((NodoAsignacion) raiz).getIdentificador();
+			InsertarSimbolo(id,-1);
+			System.out.println(id);
+			cargarTabla(((NodoAsignacion)raiz).getExpresion());
+		}
+		else if (raiz instanceof  NodoEscribir) {
+			cargarTabla(((NodoEscribir)raiz).getExpresion());
+		}
 	    else if (raiz instanceof NodoOperacion){
 	    	cargarTabla(((NodoOperacion)raiz).getOpIzquierdo());
 	    	cargarTabla(((NodoOperacion)raiz).getOpDerecho());
