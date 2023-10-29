@@ -151,13 +151,26 @@ public class Generador {
 		NodoFor n = (NodoFor)nodo;
 		int localidadSaltoInicio;
 		if(UtGen.debug)	UtGen.emitirComentario("-> for");
-		localidadSaltoInicio = UtGen.emitirSalto(0);
-		UtGen.emitirComentario("for: el salto hacia el final (luego del cuerpo) del for debe estar aqui");
-		/* Genero el cuerpo del repeat */
+
+		/* Genero el codigo de la primera sentencia del for (inicializacion de variable) */
+		generar(n.getInicio());
+
+		localidadSaltoInicio = UtGen.emitirSalto(0);//Inicio para el salto
+		UtGen.emitirComentario("for: Inicio");
+
+		/* Genero el cuerpo del for */
 		generar(n.getCuerpo());
-		/* Genero el codigo de la prueba del repeat */
+
+		UtGen.emitirComentario("for: incrementa");
+		/* Genero el codigo de la tercera sentencia del for (incrementar variable) */
+		generar(n.getIncremento());
+
+		UtGen.emitirComentario("for: evalua");
+		/* Genero el codigo de la segunda sentencia del for (evaluacion del condicional) */
 		generar(n.getFin());
-		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
+		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
+		if(UtGen.debug)	UtGen.emitirComentario("<- for");
+
 //		// Generar el código para la expresión de inicio del bucle
 //		generar(n.getInicio());
 //
@@ -192,8 +205,6 @@ public class Generador {
 //
 //		// Etiqueta para el final del bucle
 //		UtGen.emitirEtiqueta(finBucleLabel);
-
-		if(UtGen.debug)	UtGen.emitirComentario("<- for");
 	}
 
 	private static void generarAsignacion(NodoBase nodo){
