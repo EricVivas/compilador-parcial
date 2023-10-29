@@ -19,22 +19,22 @@ public class sym {
   public static final int SEMI = 22;
   public static final int END = 5;
   public static final int IF = 2;
-  public static final int LPAREN = 19;
-  public static final int WRITE = 9;
-  public static final int ID = 10;
-  public static final int NUM = 11;
-  public static final int LSBRACKET = 24;
+  public static final int LPAREN = 20;
+  public static final int WRITE = 10;
+  public static final int ID = 11;
+  public static final int NUM = 12;
+  public static final int LSBRACKET = 25;
   public static final int EOF = 0;
   public static final int MINUS = 17;
   public static final int error = 1;
-  public static final int UNTIL = 7;
-  public static final int ASSIGN = 12;
-  public static final int EQ = 13;
-  public static final int RSBRACKET = 25;
-  public static final int ARRAY = 23;
+  public static final int UNTIL = 8;
+  public static final int ASSIGN = 13;
+  public static final int EQ = 14;
+  public static final int RSBRACKET = 26;
+  public static final int FOR = 7;
+  public static final int ARRAY = 24;
   public static final int REPEAT = 6;
-  public static final int FOR = 26;
-  public static final int DECLARE = 22;
+  public static final int DECLARE = 23;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
