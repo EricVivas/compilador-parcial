@@ -84,7 +84,7 @@ espacio		= [ \t]+
 "read"          {	if(debug) System.out.println("token READ");
 			return sf.newSymbol("READ",sym.READ);
 			}
-"write"         {	if(debug) System.out.println("token WRITE");
+"write"     {	if(debug) System.out.println("token WRITE");
 			return sf.newSymbol("WRITE",sym.WRITE);
 			}
 "["        {
