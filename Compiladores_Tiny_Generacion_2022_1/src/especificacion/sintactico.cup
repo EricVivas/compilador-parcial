@@ -58,7 +58,10 @@ terminal String NUM;
 terminal ASSIGN;
 terminal EQ;
 terminal LT;
+terminal GR;
 terminal PLUS;
+terminal LOE;
+terminal GOE;
 terminal MINUS;
 terminal TIMES;
 terminal OVER;
@@ -176,8 +179,17 @@ write_stmt  ::= WRITE exp:ex	{: if(debug) System.out.println("\t regla 8");
 exp         ::= simple_exp:exI LT simple_exp:exD	{: if(debug) System.out.println("\t regla 9a"); 
 								RESULT = new NodoOperacion(exI,tipoOp.menor,exD);
 								:} 
+		| simple_exp:exI GR simple_exp:exD	{: if(debug) System.out.println("\t regla GR"); 
+								RESULT = new NodoOperacion(exI,tipoOp.mayor,exD);
+								:}
 		| simple_exp:exI EQ simple_exp:exD	{: if(debug) System.out.println("\t regla 9b"); 
 							RESULT = new NodoOperacion(exI,tipoOp.igual,exD);
+							:}
+		| simple_exp:exI LOE simple_exp:exD	{: if(debug) System.out.println("\t regla LOE"); 
+							RESULT = new NodoOperacion(exI,tipoOp.menorOIgual,exD);
+							:}
+		| simple_exp:exI GOE simple_exp:exD	{: if(debug) System.out.println("\t regla GOE"); 
+							RESULT = new NodoOperacion(exI,tipoOp.mayorOIgual,exD);
 							:}
 		| simple_exp:ex	{: if(debug) System.out.println("\t regla 9c"); 
 					RESULT = ex;

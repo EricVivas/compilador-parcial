@@ -86,8 +86,17 @@ espacio		= [ \t]+
 "<"             {	if(debug) System.out.println("token LT");
 			return sf.newSymbol("LT",sym.LT);
 			}
+">"             {	if(debug) System.out.println("token GREATER");
+			return sf.newSymbol("GR",sym.GR);
+			}
 "+"             {	if(debug) System.out.println("token PLUS");
 			return sf.newSymbol("PLUS",sym.PLUS);
+			}
+"<="             {	if(debug) System.out.println("token LESS OR EQUAL (LOE)");
+			return sf.newSymbol("LOE",sym.LOE);
+			}
+">="             {	if(debug) System.out.println("token GREATER OR EQUAL (GOE)");
+			return sf.newSymbol("GOE",sym.GOE);
 			}
 "-"             {	if(debug) System.out.println("token MINUS");
 			return sf.newSymbol("MINUS",sym.MINUS);
