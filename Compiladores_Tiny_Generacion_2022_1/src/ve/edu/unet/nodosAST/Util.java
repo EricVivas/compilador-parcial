@@ -20,8 +20,9 @@ public class Util {
 		    else if (raiz instanceof  NodoLeer)  
 		    	System.out.println("Lectura: "+((NodoLeer)raiz).getIdentificador());
 
-		    else if (raiz instanceof  NodoEscribir)
-		    	System.out.println("Escribir");
+		    else if (raiz instanceof  NodoEscribir) {
+				System.out.println("Escribir");
+			}
 		    
 		    else if (raiz instanceof NodoOperacion
 		    		|| raiz instanceof NodoValor

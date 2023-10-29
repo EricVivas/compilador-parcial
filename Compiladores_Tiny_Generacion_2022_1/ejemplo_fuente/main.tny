@@ -1,0 +1,17 @@
+
+declare array misNumeros[10];
+
+idx := 0;
+
+repeat
+    idx := idx + 1 ;
+    misNumeros[idx] := idx * idx
+    {write idx}
+until idx = 9 ;
+
+{ idx aqui es 9 }
+
+repeat
+    write misNumeros[idx];
+    idx := idx - 1
+until idx = 0

@@ -53,6 +53,13 @@ identificador	= {letra}+
 nuevalinea		= \n | \n\r | \r\n
 espacio		= [ \t]+
 %%
+
+"declare"   {
+			    return sf.newSymbol("DECLARE",sym.DECLARE);
+			}
+"array"     {
+			    return sf.newSymbol("ARRAY",sym.ARRAY);
+			}
 "if"            {	if(debug) System.out.println("token IF");
 			return sf.newSymbol("IF",sym.IF);
 			}
@@ -68,6 +75,9 @@ espacio		= [ \t]+
 "repeat"        {	if(debug) System.out.println("token REPEAT");
 			return sf.newSymbol("REPEAT",sym.REPEAT);
 			}
+"for"       {	if(debug) System.out.println("token FOR");
+			return sf.newSymbol("FOR",sym.FOR);
+			}
 "until"         {	if(debug) System.out.println("token UNTIL");
 			return sf.newSymbol("UNTIL",sym.UNTIL);
 			}
@@ -77,6 +87,12 @@ espacio		= [ \t]+
 "write"         {	if(debug) System.out.println("token WRITE");
 			return sf.newSymbol("WRITE",sym.WRITE);
 			}
+"["        {
+			    return sf.newSymbol("LSBRACKET",sym.LSBRACKET);
+			}
+"]"        {
+                return sf.newSymbol("RSBRACKET",sym.RSBRACKET);
+            }
 ":="            {	if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
 			}

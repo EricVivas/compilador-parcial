@@ -81,27 +81,47 @@ public class Generador {
 			generarIf(nodo);
 		}else if (nodo instanceof  NodoRepeat){
 			generarRepeat(nodo);
+		}else if (nodo instanceof  NodoFor){
+			generarFor(nodo);
 		}else if (nodo instanceof  NodoAsignacion){
 			generarAsignacion(nodo);
 		}else if (nodo instanceof  NodoLeer){
 			generarLeer(nodo);
 		}else if (nodo instanceof  NodoEscribir){
 			generarEscribir(nodo);
-		}else if (nodo instanceof NodoValor){
+		} else if ( nodo instanceof DeclaracionArray ) {
+			DeclaracionArray arrDecl = (DeclaracionArray) nodo;
+		} else if (nodo instanceof NodoValor){
 			generarValor(nodo);
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
+		} else if(nodo instanceof  ValorArray )  {
+			generarValorArray(nodo);
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido");
 		}
 		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
-		if(nodo.TieneHermano())
+		if( nodo != null && nodo.TieneHermano())
 			generar(nodo.getHermanoDerecha());
 	}else
 		System.out.println("���ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
+	private  static void generarValorArray(NodoBase nodo) {
+		ValorArray varr = (ValorArray) nodo;
+		// pone en AC el valor numero del idx
+
+		generar(varr.getIdxExpresion());
+
+		// TODO fix bug where this explotes if undefined array , add semantic analizer
+
+		int direccion = tablaSimbolos.getDireccion(varr.getIdentificador());
+		UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "");
+		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "");
+		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC, UtGen.GP, "");
+		UtGen.emitirRM("LD", UtGen.AC,0 ,UtGen.AC, "");
+	}
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
@@ -143,11 +163,105 @@ public class Generador {
 			generar(n.getPrueba());
 			UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "repeat: jmp hacia el inicio del cuerpo");
 		if(UtGen.debug)	UtGen.emitirComentario("<- repeat");
-	}		
-	
+	}
+
+	private static void generarFor(NodoBase nodo){
+		NodoFor n = (NodoFor)nodo;
+		int localidadSaltoInicio;
+		if(UtGen.debug)	UtGen.emitirComentario("-> for");
+
+		/* Genero el codigo de la primera sentencia del for (inicializacion de variable) */
+		generar(n.getInicio());
+
+		localidadSaltoInicio = UtGen.emitirSalto(0);//Inicio para el salto
+		UtGen.emitirComentario("for: Inicio");
+
+		/* Genero el cuerpo del for */
+		generar(n.getCuerpo());
+
+		UtGen.emitirComentario("for: incrementa");
+		/* Genero el codigo de la tercera sentencia del for (incrementar variable) */
+		generar(n.getIncremento());
+
+		UtGen.emitirComentario("for: evalua");
+		/* Genero el codigo de la segunda sentencia del for (evaluacion del condicional) */
+		generar(n.getFin());
+		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
+		if(UtGen.debug)	UtGen.emitirComentario("<- for");
+
+//		// Generar el código para la expresión de inicio del bucle
+//		generar(n.getInicio());
+//
+//		// Almacenar el valor inicial de la variable de control del bucle
+//		int direccion = tablaSimbolos.getDireccion(n.getVariable());
+//		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "for: almacenar valor inicial en la variable " + n.getVariable());
+//
+//		// Etiqueta para la condición del bucle
+//		int condicionLabel = UtGen.nuevaEtiqueta();
+//
+//
+//		// Generar la etiqueta para la condición de inicio del bucle
+//		UtGen.emitirEtiqueta(condicionLabel);
+//
+//		// Generar el código para la condición del bucle
+//		UtGen.emitirComentario("for: verificar condición");
+//		generar(n.getCondicion());
+//
+//		// Saltar al final del bucle si la condición es falsa
+//		UtGen.emitirRM("JUMPIF", UtGen.AC, finBucleLabel, UtGen.PC, "Saltar al final del bucle si la condición es falsa");
+//
+//		// Generar el código para el cuerpo del bucle
+//		UtGen.emitirComentario("for: cuerpo del bucle");
+//		generar(n.getCuerpo());
+//
+//		// Generar el código para la expresión de incremento
+//		UtGen.emitirComentario("for: expresión de incremento");
+//		generar(n.getIncremento());
+//
+//		// Salto de vuelta a la condición del bucle
+//		UtGen.emitirRM("JUMP", 0, condicionLabel, UtGen.PC, "Salto de vuelta a la condición del bucle");
+//
+//		// Etiqueta para el final del bucle
+//		UtGen.emitirEtiqueta(finBucleLabel);
+	}
+
 	private static void generarAsignacion(NodoBase nodo){
-		NodoAsignacion n = (NodoAsignacion)nodo;
 		int direccion;
+		NodoAsignacion n = (NodoAsignacion)nodo;
+
+		if ( n.getIsArray() && n.getIdxExpression() != null ) {
+
+			System.out.println("Hay una acciones de array!");
+			// instrucciones para guardar idx en AC
+			generar( n.getIdxExpression() );
+
+			// guarda direccion base de variable en AC1
+			direccion = tablaSimbolos.getDireccion(n.getIdentificador());
+			System.out.println(direccion);
+			UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "");
+
+			// AC = &arr + idx = ac + ac1
+			UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "");
+
+			// tempX = AC = &arr + idx
+			UtGen.emitirRM("ST", UtGen.AC, desplazamientoTmp--, UtGen.MP, "");
+
+			// intrucciones para guardar valor derecha del igual  en AC
+			generar( n.getExpresion() );
+
+			// AC1 = tempX = &arr + idx
+			UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "");
+
+			// AC1 = &arr + idx + GP
+			// esto es inutil por que GP = 0 pero igual se pone por si fuera a cambiar
+			UtGen.emitirRO("ADD", UtGen.AC1, UtGen.AC1, UtGen.GP, "");
+
+			// *AC1 = AC => *(&arr + idx + GP) =  value;
+			UtGen.emitirRM("ST", UtGen.AC, 0 , UtGen.AC1, "");
+			return;
+		}
+
+
 		if(UtGen.debug)	UtGen.emitirComentario("-> asignacion");		
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
 		generar(n.getExpresion());
