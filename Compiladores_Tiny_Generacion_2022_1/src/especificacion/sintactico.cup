@@ -75,6 +75,8 @@ terminal GOE;
 terminal MINUS;
 terminal TIMES;
 terminal OVER;
+terminal AND;
+terminal OR;
 terminal LPAREN;
 terminal RPAREN;
 terminal SEMI;
@@ -101,10 +103,13 @@ non terminal NodoBase factor;
 non terminal NodoBase array_declaration;
 
 /* Precedencia de operadores */
+
+precedence left TIMES;
 precedence left PLUS;
 precedence left MINUS;
-precedence left TIMES;
-
+precedence left LT;
+precedence left OR;
+precedence left AND;
 
 /* REGLAS GRAMATICALES */
 program     ::= stmt_seq:s	{: if(debug) System.out.println("\t regla 1"); 
@@ -141,7 +146,7 @@ stmt        ::= if_stmt:sif	{: if(debug) System.out.println("\t regla 3a");
             | assign_stmt:sasi SEMI	{: if(debug) System.out.println("\t regla 3c");
 						RESULT=sasi;
 						:}
-            | read_stmt:slec SEMI	{: if(debug) System.out.println("\t regla 3d");
+            | read_stmt:slec SEMI {: if(debug) System.out.println("\t regla 3d");
 					RESULT=slec;
 					:}
             | write_stmt:sesc SEMI
@@ -232,6 +237,12 @@ exp         ::= simple_exp:exI LT simple_exp:exD	{: if(debug) System.out.println
 		| simple_exp:exI EQ simple_exp:exD	{: if(debug) System.out.println("\t regla 9b"); 
 							RESULT = new NodoOperacion(exI,tipoOp.igual,exD);
 							:}
+		| exp:exI OR exp:exD  {: if(debug) System.out.println("\t regla 9h (OR lógico)");
+						RESULT = new NodoOperacion(exI, tipoOp.or, exD);
+						:}
+		| exp:exI AND exp:exD  {: if(debug) System.out.println("\t regla 9g (AND lógico)");
+                            RESULT = new NodoOperacion(exI, tipoOp.and, exD);
+                        :}
 		| simple_exp:exI LOE simple_exp:exD	{: if(debug) System.out.println("\t regla LOE"); 
 							RESULT = new NodoOperacion(exI,tipoOp.menorOIgual,exD);
 							:}
