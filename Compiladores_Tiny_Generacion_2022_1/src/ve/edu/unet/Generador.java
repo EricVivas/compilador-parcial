@@ -65,7 +65,7 @@ public class Generador {
 			String command = "cmd /c" + " start" + command_to_playwith;
 			//Starting the new child process
 			Process childprocess11 = Runtime.getRuntime().exec(command);
-			System.out.println("The child process is Alive: " + childprocess11.isAlive());
+			//System.out.println("The child process is Alive: " + childprocess11.isAlive());
 			System.out.println();
 		}
 		catch (Exception e){

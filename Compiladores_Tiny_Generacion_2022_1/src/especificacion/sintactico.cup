@@ -115,7 +115,7 @@ program     ::= stmt_seq:s	{: if(debug) System.out.println("\t regla 1");
 					:}
 		;
 
-stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(debug) System.out.println("\t regla 2a"); 
+stmt_seq    ::= stmt_seq:ini  stmt:sent	{: if(debug) System.out.println("\t regla 2a");
 						NodoBase hijoActual = ini;
 						if(hijoActual !=null){
 							while(hijoActual.TieneHermano()){
@@ -141,13 +141,13 @@ stmt        ::= if_stmt:sif	{: if(debug) System.out.println("\t regla 3a");
             | for_stmt:sfor	{: if(debug) System.out.println("\t regla 3g");
 						RESULT=sfor;
 						:}
-            | assign_stmt:sasi	{: if(debug) System.out.println("\t regla 3c"); 
+            | assign_stmt:sasi SEMI	{: if(debug) System.out.println("\t regla 3c");
 						RESULT=sasi;
 						:}
-            | read_stmt:slec	{: if(debug) System.out.println("\t regla 3d"); 
+            | read_stmt:slec SEMI {: if(debug) System.out.println("\t regla 3d");
 					RESULT=slec;
 					:}
-            | write_stmt:sesc
+            | write_stmt:sesc SEMI
             {:
                 System.out.println("INSTRUCCION ESCRIBIR");
                 if(debug) System.out.println("\t regla 3e");
@@ -157,7 +157,7 @@ stmt        ::= if_stmt:sif	{: if(debug) System.out.println("\t regla 3a");
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;
 				:}
-			| array_declaration:arr_decl
+			| array_declaration:arr_decl SEMI
 			{:
 			    System.out.println("Yo whats is happening");
 			    RESULT = arr_decl;
@@ -183,7 +183,7 @@ repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{: if(debug) System.out.
 							:}
 		;
 
-for_stmt ::= FOR assign_stmt:inicio SEMI exp:fin SEMI stmt:increm THEN stmt_seq:cuerpo END {:
+for_stmt ::= FOR assign_stmt:inicio SEMI exp:fin SEMI assign_stmt:increm THEN stmt_seq:cuerpo END {:
                     if(debug) System.out.println("\t regla 13");
                     RESULT = new NodoFor(cuerpo,inicio,fin,increm);
             :}
