@@ -35,7 +35,12 @@ public class TablaSimbolos {
 	    else if (raiz instanceof  NodoRepeat){
 	    	cargarTabla(((NodoRepeat)raiz).getCuerpo());
 	    	cargarTabla(((NodoRepeat)raiz).getPrueba());
-	    } else if (raiz instanceof  NodoLeer){
+	    } else if (raiz instanceof  NodoFor){
+			cargarTabla(((NodoFor)raiz).getCuerpo());
+			cargarTabla(((NodoFor)raiz).getInicio());
+			cargarTabla(((NodoFor)raiz).getFin());
+			cargarTabla(((NodoFor)raiz).getIncremento());
+		} else if (raiz instanceof  NodoLeer){
 			NodoLeer n = (NodoLeer)raiz;
 			InsertarSimbolo(n.getIdentificador(),-1);
 		} else if (raiz instanceof  NodoAsignacion) {

@@ -823,18 +823,23 @@ BORRAR SI NO SE NECESITA
 			return sf.newSymbol("LT",sym.LT);
             }
             // fall through
+<<<<<<< HEAD
           case 40: break;
+=======
+          case 37: break;
           case 13:
-            { if(debug) System.out.println("token EQ");
-			return sf.newSymbol("EQ",sym.EQ);
-            }
             // fall through
+<<<<<<< HEAD
           case 41: break;
+=======
+          case 38: break;
+>>>>>>> andres_branch
           case 14:
             { if(debug) System.out.println("token ID");
 				return sf.newSymbol("ID",sym.ID,new String(yytext()));
             }
             // fall through
+<<<<<<< HEAD
           case 42: break;
           case 15:
             { return sf.newSymbol("LSBRACKET",sym.LSBRACKET);
@@ -915,6 +920,74 @@ BORRAR SI NO SE NECESITA
             }
             // fall through
           case 56: break;
+=======
+          case 39: break;
+          case 15:
+            { if(debug) System.out.println("token ASSIGN");
+			return sf.newSymbol("ASSIGN",sym.ASSIGN);
+            }
+            // fall through
+          case 40: break;
+          case 16:
+            { if(debug) System.out.println("token IF");
+			return sf.newSymbol("IF",sym.IF);
+            }
+            // fall through
+          case 41: break;
+          case 17:
+            { if(debug) System.out.println("token END");
+			return sf.newSymbol("END",sym.END);
+            }
+            // fall through
+          case 42: break;
+          case 18:
+            { if(debug) System.out.println("token FOR");
+			return sf.newSymbol("FOR",sym.FOR);
+            }
+            // fall through
+          case 43: break;
+          case 19:
+            { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO");
+            }
+            // fall through
+          case 44: break;
+          case 20:
+            { if(debug) System.out.println("token ELSE");
+			return sf.newSymbol("ELSE",sym.ELSE);
+            }
+            // fall through
+          case 45: break;
+          case 21:
+            { if(debug) System.out.println("token READ");
+			return sf.newSymbol("READ",sym.READ);
+            }
+            // fall through
+          case 46: break;
+          case 22:
+            { if(debug) System.out.println("token THEN");
+			return sf.newSymbol("THEN",sym.THEN);
+            }
+            // fall through
+          case 47: break;
+          case 23:
+            { if(debug) System.out.println("token UNTIL");
+			return sf.newSymbol("UNTIL",sym.UNTIL);
+            }
+            // fall through
+          case 48: break;
+          case 24:
+            { if(debug) System.out.println("token WRITE");
+			return sf.newSymbol("WRITE",sym.WRITE);
+            }
+            // fall through
+          case 49: break;
+          case 25:
+            { if(debug) System.out.println("token REPEAT");
+			return sf.newSymbol("REPEAT",sym.REPEAT);
+            }
+            // fall through
+          case 50: break;
+>>>>>>> andres_branch
           default:
             zzScanError(ZZ_NO_MATCH);
         }

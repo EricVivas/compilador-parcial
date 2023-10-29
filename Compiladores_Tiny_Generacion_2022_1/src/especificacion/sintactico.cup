@@ -57,6 +57,7 @@ terminal THEN;
 terminal ELSE;
 terminal END;
 terminal REPEAT;
+terminal FOR;
 terminal UNTIL;
 terminal READ;
 terminal WRITE;
@@ -84,6 +85,7 @@ non terminal NodoBase stmt_seq;
 non terminal NodoBase stmt;
 non terminal NodoBase if_stmt;
 non terminal NodoBase repeat_stmt;
+non terminal NodoBase for_stmt;
 non terminal NodoBase assign_stmt;
 non terminal NodoBase read_stmt;
 non terminal NodoBase write_stmt;
@@ -128,6 +130,9 @@ stmt        ::= if_stmt:sif	{: if(debug) System.out.println("\t regla 3a");
             | repeat_stmt:srep	{: if(debug) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}
+            | for_stmt:sfor	{: if(debug) System.out.println("\t regla 3g");
+						RESULT=sfor;
+						:}
             | assign_stmt:sasi	{: if(debug) System.out.println("\t regla 3c"); 
 						RESULT=sasi;
 						:}
@@ -165,9 +170,15 @@ if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END	{: if(debug) System.out.printl
 		:}
 		;
 
-repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{: if(debug) System.out.println("\t regla 5"); 
+repeat_stmt ::= REPEAT stmt_seq:cuerpo UNTIL exp:prueba	{: if(debug) System.out.println("\t regla 5");
 							RESULT = new NodoRepeat(cuerpo,prueba);
 							:}
+		;
+
+for_stmt ::= FOR assign_stmt:inicio SEMI exp:fin SEMI stmt:increm THEN stmt_seq:cuerpo END {:
+                    if(debug) System.out.println("\t regla 13");
+                    RESULT = new NodoFor(cuerpo,inicio,fin,increm);
+            :}
 		;
 
 assign_stmt ::= ID:variable
