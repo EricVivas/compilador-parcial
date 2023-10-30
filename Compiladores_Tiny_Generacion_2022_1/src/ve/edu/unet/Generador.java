@@ -111,15 +111,18 @@ public class Generador {
 	private  static void generarValorArray(NodoBase nodo) {
 		ValorArray varr = (ValorArray) nodo;
 		// pone en AC el valor numero del idx
-
+		// AC = IDX
 		generar(varr.getIdxExpresion());
-
-		// TODO fix bug where this explotes if undefined array , add semantic analizer
 
 		int direccion = tablaSimbolos.getDireccion(varr.getIdentificador());
 		UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "");
+		// AC1 = &arr
 		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "");
+		// AC = idx + &arr
 		UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC, UtGen.GP, "");
+		// AC = AC + GP
+		// AC= la memoria final
+		// AC =  (0 + reg[ac]
 		UtGen.emitirRM("LD", UtGen.AC,0 ,UtGen.AC, "");
 	}
 
@@ -133,20 +136,26 @@ public class Generador {
 		UtGen.emitirComentario("If: el salto hacia el else debe estar aqui");
 		/*Genero la parte THEN*/
 		generar(n.getParteThen());
-		localidadSaltoEnd = UtGen.emitirSalto(1);
+
 		UtGen.emitirComentario("If: el salto hacia el final debe estar aqui");
 		localidadActual = UtGen.emitirSalto(0);
-		UtGen.cargarRespaldo(localidadSaltoElse);
-		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual, "if: jmp hacia else");
-		UtGen.restaurarRespaldo();
+;
 		/*Genero la parte ELSE*/
 		if(n.getParteElse()!=null){
+			UtGen.cargarRespaldo(localidadSaltoElse);
+				UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual + 1, "if: jmp hacia else");
+			UtGen.restaurarRespaldo();
+			localidadSaltoEnd = UtGen.emitirSalto(1);
 			generar(n.getParteElse());
 			localidadActual = UtGen.emitirSalto(0);
 			UtGen.cargarRespaldo(localidadSaltoEnd);
 			UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual, "if: jmp hacia el final");
 			UtGen.restaurarRespaldo();
-    	}
+    	} else {
+			UtGen.cargarRespaldo(localidadSaltoElse);
+				UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual , "if: jmp hacia else");
+			UtGen.restaurarRespaldo();
+		}
 		
 		if(UtGen.debug)	UtGen.emitirComentario("<- if");
 	}
@@ -169,38 +178,30 @@ public class Generador {
 		NodoFor n = (NodoFor)nodo;
 		int localidadSaltoInicio;
 		if(UtGen.debug)	UtGen.emitirComentario("-> for");
-
 		/* Genero el codigo de la primera sentencia del for (inicializacion de variable) */
 		generar(n.getInicio());
-
 		/* Genero el codigo de la segunda sentencia del for (evaluacion del condicional) */
 		generar(n.getFin());
 		UtGen.emitirComentario("for: emitir salto");
 		localidadSaltoInicio = UtGen.emitirSalto(1);//Inicio para el salto
 		UtGen.emitirComentario("for: Inicio");
-
 		/* Genero el cuerpo del for */
 		generar(n.getCuerpo());
-
 		UtGen.emitirComentario("for: incrementa");
 		/* Genero el codigo de la tercera sentencia del for (incrementar variable) */
 		generar(n.getIncremento());
-
 		UtGen.emitirComentario("for: evalua");
 		/* Genero el codigo de la segunda sentencia del for (evaluacion del condicional) */
 		generar(n.getFin());
 		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
-
 		/*obtiene el numero de la instruccion despues del for*/
 		int localidadActual = UtGen.emitirSalto(0);
-
 		/*carga la instruccion faltante que es la que salta a fuera del for*/
 		UtGen.cargarRespaldo(localidadSaltoInicio);
 		/*emite un salto si el primer getfin es falso*/
-		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual, "if: jmp hacia else");
+		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual, "if: ");
 		/*deja las instrucciones en el orden*/
 		UtGen.restaurarRespaldo();
-
 		if(UtGen.debug)	UtGen.emitirComentario("<- for");
 
 	}

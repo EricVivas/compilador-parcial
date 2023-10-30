@@ -117,7 +117,7 @@ program     ::= stmt_seq:s	{: if(debug) System.out.println("\t regla 1");
 					:}
 		;
 
-stmt_seq    ::= stmt_seq:ini  stmt:sent	{: if(debug) System.out.println("\t regla 2a");
+stmt_seq    ::= stmt_seq:ini  stmt:sent 	{: if(debug) System.out.println("\t regla 2a");
 						NodoBase hijoActual = ini;
 						if(hijoActual !=null){
 							while(hijoActual.TieneHermano()){
@@ -129,7 +129,7 @@ stmt_seq    ::= stmt_seq:ini  stmt:sent	{: if(debug) System.out.println("\t regl
 							RESULT=sent;
 						}
 						:}
-            | stmt:sent	{: if(debug) System.out.println("\t regla 2b"); 
+            | stmt:sent 	{: if(debug) System.out.println("\t regla 2b");
 				RESULT=sent;				
 				:}
 		;
@@ -264,6 +264,25 @@ simple_exp  ::= simple_exp:exI PLUS term:exD	{: if(debug) System.out.println("\t
 				RESULT=ex;
 				:}
 		;
+
+
+stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(debug) System.out.println("\t regla 2a");
+						NodoBase hijoActual = ini;
+						if(hijoActual !=null){
+							while(hijoActual.TieneHermano()){
+								hijoActual = hijoActual.getHermanoDerecha();
+							}
+							hijoActual.setHermanoDerecha(sent);
+							RESULT=ini;
+						}else{
+							RESULT=sent;
+						}
+						:}
+            | stmt:sent	{: if(debug) System.out.println("\t regla 2b");
+				RESULT=sent;
+				:}
+		;
+
 
 term        ::= term:exI TIMES factor:exD
             {:
